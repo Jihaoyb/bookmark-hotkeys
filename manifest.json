@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": "Bookmark Hotkeys",
+    "version": "1.0.0",
+    "description": "Open your bookmarks with customizable keyboard shortcuts.",
+    "permissions": ["bookmarks", "storage", "tabs"],
+    "background": {
+      "service_worker": "src/background.js"
+    },
+    "options_page": "src/options.html",
+    "commands": {
+      "open_bookmark_1":  { "description": "Open Bookmark Slot 1" },
+      "open_bookmark_2":  { "description": "Open Bookmark Slot 2" },
+      "open_bookmark_3":  { "description": "Open Bookmark Slot 3" },
+      "open_bookmark_4":  { "description": "Open Bookmark Slot 4" },
+      "open_bookmark_5":  { "description": "Open Bookmark Slot 5" },
+      "open_bookmark_6":  { "description": "Open Bookmark Slot 6" },
+      "open_bookmark_7":  { "description": "Open Bookmark Slot 7" },
+      "open_bookmark_8":  { "description": "Open Bookmark Slot 8" },
+      "open_bookmark_9":  { "description": "Open Bookmark Slot 9" }
+    },
+    "icons": {
+      "16": "src/icons/icons16.png",
+      "32": "src/icons/icons32.png",
+      "128": "src/icons/icons128.png"
+    }
+  }
+  

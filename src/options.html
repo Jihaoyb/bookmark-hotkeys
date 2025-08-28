@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Bookmark Hotkeys – Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      color-scheme: light dark;
+      --bg:#0b0b0c; --panel:#111214; --panel2:#15171a;
+      --text:#e7e7ea; --muted:#9aa0a6; --border:#2a2d33;
+      --ring:#6366f1; --accent:#3b82f6;
+      --good:#10b981; --good-2:#0ea371;
+      --danger:#ef4444; --danger-2:#dc2626;
+      --neutral:#64748b; --neutral-2:#475569;
+      --shadow:0 8px 24px rgba(0,0,0,.28);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f8fa; --panel:#fff; --panel2:#fafbff;
+        --text:#0b0b0c; --muted:#6b7280; --border:#e5e7eb;
+        --shadow:0 8px 24px rgba(2,6,23,.06);
+      }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    .wrap{max-width:980px;margin:0 auto;padding:24px}
+
+    /* header */
+    .header{position:sticky;top:0;z-index:10;backdrop-filter:saturate(180%) blur(8px);
+      background:color-mix(in oklab, var(--bg) 85%, transparent);border-bottom:1px solid var(--border)}
+    .header-inner{max-width:980px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px;justify-content:space-between}
+    h1{margin:0;font-size:16px;letter-spacing:.3px}
+    .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .pill{padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted);background:var(--panel2)}
+
+    /* outline→fill buttons (pop on hover) */
+    .btn{padding:8px 14px;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--text);cursor:pointer;transition:transform .06s ease, background-color .15s ease, color .15s ease, border-color .15s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn.neutral{color:var(--neutral);border-color:var(--neutral-2)}
+    .btn.neutral:hover{background:var(--neutral);color:#fff}
+    .btn.danger{color:var(--danger);border-color:var(--danger-2)}
+    .btn.danger:hover{background:var(--danger);color:#fff}
+
+    /* panel */
+    .block{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);margin:16px 0}
+    .block-title{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px}
+
+    /* segmented */
+    .seg{display:inline-flex;border:1px solid var(--border);border-radius:10px;padding:2px;background:var(--panel2)}
+    .seg button{border:0;background:transparent;color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:12px;white-space:nowrap}
+    .seg button[aria-pressed="true"]{color:var(--text);background:color-mix(in oklab, var(--ring) 24%, transparent);outline:1px solid color-mix(in oklab, var(--ring) 40%, transparent)}
+    .hint{color:var(--muted);font-size:12px;margin-left:8px}
+
+    /* rows (grid with URL on its own line) */
+    .slots{display:grid;gap:10px}
+    .row{
+      display:grid;
+      grid-template-columns: 120px 1fr auto; /* Slot badge | combobox | actions */
+      grid-auto-rows: auto;
+      gap:10px;align-items:center;
+      background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px
+    }
+    .slot-meta{display:flex;align-items:center;gap:8px;white-space:nowrap;min-width:0}
+    .badge{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--panel2);
+      border:1px solid var(--border);color:var(--muted);padding:6px 8px;border-radius:8px}
+
+    .in{width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel2);color:var(--text);outline:none}
+    .in:focus{border-color:var(--ring);box-shadow:0 0 0 3px color-mix(in oklab, var(--ring) 30%, transparent)}
+
+    /* custom combobox */
+    .combo{position:relative;width:100%}
+    .combo-btn{
+      width:100%;display:flex;align-items:center;gap:8px;justify-content:space-between;
+      padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:var(--panel2);color:var(--text);cursor:pointer
+    }
+    .combo-main{display:flex;align-items:center;gap:8px;min-width:0}
+    .combo-icon{width:16px;height:16px;border-radius:3px;display:none}
+    .combo-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .combo-caret{opacity:.7}
+    .combo-pop{position:absolute;z-index:1000;left:0;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);display:none;max-height:300px;overflow:auto}
+    .combo-search{margin:8px;display:block}
+    .combo-list{list-style:none;margin:0;padding:4px 8px 8px 8px}
+    .combo-item{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;cursor:pointer}
+    .combo-item:hover{background:var(--panel2)}
+    .combo-item img{width:16px;height:16px;border-radius:3px}
+
+    /* URL row (spans under combo + actions) */
+    .url-wrap{grid-column: 2 / 4; display:none}
+
+    /* actions */
+    .act{padding:8px 14px;border-radius:10px;border:1px solid; background:transparent; cursor:pointer; font-weight:600; line-height:1; height:36px; display:inline-flex; align-items:center; justify-content:center; min-width:84px; transition:transform .06s ease, background-color .15s ease, color .15s ease, border-color .15s ease}
+    .act:hover{transform:translateY(-1px)}
+    .act.success{color:var(--good);border-color:var(--good-2)}
+    .act.success:hover{background:var(--good);color:#fff}
+    .act.danger{color:var(--danger);border-color:var(--danger-2)}
+    .act.danger:hover{background:var(--danger);color:#fff}
+
+    .empty{border:1px dashed var(--border);border-radius:12px;padding:20px;text-align:center;color:var(--muted)}
+    .toast{position:fixed;right:16px;bottom:16px;padding:10px 14px;border-radius:10px;background:#111;color:#fff;opacity:0;transition:opacity .2s ease-in-out;box-shadow:var(--shadow)}
+    .toast.show{opacity:1}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <h1>Bookmark Hotkeys</h1>
+      <div class="toolbar">
+        <span class="pill" id="slotCounter">0 / 9</span>
+        <button id="addSlotBtn" class="btn neutral">Add slot</button>
+        <button id="resetBtn" class="btn danger">Reset</button>
+        <button id="shortcutsBtn" class="btn neutral">Keyboard Shortcuts</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="block">
+      <div class="block-title">Default open behavior</div>
+      <div class="seg" id="defaultSeg" role="tablist" aria-label="Default open behavior">
+        <button data-val="current" aria-pressed="false">Current tab</button>
+        <button data-val="newTab" aria-pressed="true">New tab</button>
+        <button data-val="newWindow" aria-pressed="false">New window</button>
+      </div>
+      <span class="hint">Per-slot overrides can differ. Testing may replace this page if using “Current tab”.</span>
+    </div>
+
+    <div id="slotList" class="slots"></div>
+    <div id="emptyState" class="empty" style="display:none">No hotkeys yet. Click <b>Add slot</b> to create one.</div>
+  </div>
+
+  <div class="toast" id="toast">Saved ✓</div>
+
+  <script src="options.js"></script>
+</body>
+</html>
