@@ -2,7 +2,7 @@
 
 Quickly open your favorite sites with keyboard shortcuts. Configure slots in a minimal, Linear-style options page: pick a bookmark (or “Customize” for any URL), choose how it opens (current tab / new tab / new window), and test instantly.
 
-![screenshot](screenshot.png)
+![screenshot](docs/screenshot.png)
 
 ## Features
 - Per-slot bookmark picker (with favicon + site name) or **Customize** any URL
@@ -17,8 +17,8 @@ Quickly open your favorite sites with keyboard shortcuts. Configure slots in a m
 ## Installation (Developer Mode)
 1. **Clone** this repo  
     ```bash
-    git clone https://github.com/<you>/<repo>.git
-    cd <repo>
+    git clone [https://github.com/<you>/<repo>.git](https://github.com/Jihaoyb/bookmark-hotkeys.git)
+    cd bookmark-hotkeys
 2. Open chrome://extensions → toggle Developer mode (top right).
 3. Click Load unpacked → select this folder (the one containing manifest.json).
 
